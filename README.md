@@ -1,6 +1,4 @@
 # AWS Infrastructure Automation Project
-
-## 🎯 Project Goal
 End-to-End Infrastructure Automation with Terraform & Ansible on AWS to:
 - Provision and manage AWS infrastructure using Terraform
 - Configure and deploy software with Ansible
