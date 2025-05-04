@@ -1,0 +1,26 @@
+---
+- name: Configure EC2 instance with common settings
+  hosts: all
+  become: yes
+  roles:
+    - common
+
+- name: Configure NGINX web server
+  hosts: app_servers
+  become: yes
+  roles:
+    - nginx
+
+- name: Deploy application
+  hosts: app_servers
+  become: yes
+  roles:
+    - app
+
+- name: Setup monitoring stack
+  hosts: monitoring
+  become: yes
+  roles:
+    - node_exporter
+    - prometheus
+    - grafana

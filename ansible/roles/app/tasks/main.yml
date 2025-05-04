@@ -1,0 +1,49 @@
+---
+- name: Create application directories
+  file:
+    path: "/opt/app/{{ item }}"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  loop:
+    - src
+    - logs
+
+- name: Deploy sample application
+  template:
+    src: app.js.j2
+    dest: /opt/app/src/app.js
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
+- name: Install Node.js
+  apt:
+    name: 
+      - nodejs
+      - npm
+    state: present
+    update_cache: yes
+
+- name: Create package.json
+  template:
+    src: package.json.j2
+    dest: /opt/app/package.json
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
+- name: Install npm dependencies
+  npm:
+    path: /opt/app
+    state: present
+
+- name: Create app service
+  template:
+    src: app.service.j2
+    dest: /etc/systemd/system/app.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart app service

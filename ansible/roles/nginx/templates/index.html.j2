@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AWS Infrastructure Automation Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        h2 {
+            color: #3498db;
+        }
+        .status {
+            padding: 10px;
+            background-color: #e2f3ce;
+            border-left: 5px solid #5cb85c;
+            margin-bottom: 20px;
+        }
+        .links {
+            margin-top: 20px;
+        }
+        .links a {
+            display: block;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AWS Infrastructure Automation Project</h1>
+        <div class="status">
+            <p>✅ Infrastructure successfully deployed!</p>
+            <p>Server: {{ ansible_hostname }}</p>
+            <p>IP Address: {{ ansible_default_ipv4.address }}</p>
+        </div>
+        <h2>Infrastructure Components:</h2>
+        <ul>
+            <li>AWS EC2 Instance (provisioned by Terraform)</li>
+            <li>NGINX Web Server (configured by Ansible)</li>
+            <li>Monitoring Stack (Prometheus + Grafana)</li>
+        </ul>
+        <div class="links">
+            <h2>Monitoring:</h2>
+            <a href="http://{{ ansible_default_ipv4.address }}:3000" target="_blank">Grafana Dashboard</a>
+            <a href="http://{{ ansible_default_ipv4.address }}:9090" target="_blank">Prometheus</a>
+        </div>
+    </div>
+</body>
+</html>

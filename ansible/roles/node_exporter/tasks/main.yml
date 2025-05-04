@@ -1,0 +1,48 @@
+---
+- name: Create Node Exporter system group
+  group:
+    name: node_exporter
+    system: yes
+    state: present
+
+- name: Create Node Exporter system user
+  user:
+    name: node_exporter
+    system: yes
+    shell: /sbin/nologin
+    group: node_exporter
+    createhome: no
+
+- name: Download Node Exporter
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+    dest: /tmp/node_exporter.tar.gz
+    mode: '0644'
+
+- name: Extract Node Exporter
+  unarchive:
+    src: /tmp/node_exporter.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Move Node Exporter binary
+  copy:
+    src: /tmp/node_exporter-1.5.0.linux-amd64/node_exporter
+    dest: /usr/local/bin/node_exporter
+    remote_src: yes
+    mode: '0755'
+    owner: node_exporter
+    group: node_exporter
+
+- name: Create Node Exporter service file
+  template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+    mode: '0644'
+
+- name: Ensure Node Exporter service is enabled and started
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: yes
+    daemon_reload: yes

@@ -1,0 +1,22 @@
+const http = require('http');
+
+const hostname = '0.0.0.0';
+const port = 3001;
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  
+  const data = {
+    message: 'Hello from AWS Infrastructure Automation Project!',
+    hostname: '{{ ansible_hostname }}',
+    timestamp: new Date().toISOString(),
+    environment: 'production'
+  };
+  
+  res.end(JSON.stringify(data, null, 2));
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});

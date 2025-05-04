@@ -1,0 +1,60 @@
+---
+- name: Install Grafana repository key
+  apt_key:
+    url: https://apt.grafana.com/gpg.key
+    state: present
+
+- name: Add Grafana repository
+  apt_repository:
+    repo: "deb https://apt.grafana.com stable main"
+    state: present
+    update_cache: yes
+
+- name: Install Grafana
+  apt:
+    name: grafana
+    state: present
+    update_cache: yes
+
+- name: Create Grafana configuration directory
+  file:
+    path: /etc/grafana/provisioning/{{ item }}
+    state: directory
+    mode: '0755'
+  loop:
+    - datasources
+    - dashboards
+
+- name: Configure Prometheus data source
+  template:
+    src: datasource.yml.j2
+    dest: /etc/grafana/provisioning/datasources/prometheus.yml
+    mode: '0644'
+
+- name: Configure dashboard provider
+  template:
+    src: dashboard-provider.yml.j2
+    dest: /etc/grafana/provisioning/dashboards/provider.yml
+    mode: '0644'
+
+- name: Create dashboards directory
+  file:
+    path: /var/lib/grafana/dashboards
+    state: directory
+    mode: '0755'
+    owner: grafana
+    group: grafana
+
+- name: Copy Node Exporter dashboard
+  template:
+    src: node-exporter-dashboard.json.j2
+    dest: /var/lib/grafana/dashboards/node-exporter.json
+    mode: '0644'
+    owner: grafana
+    group: grafana
+
+- name: Ensure Grafana service is enabled and started
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: yes

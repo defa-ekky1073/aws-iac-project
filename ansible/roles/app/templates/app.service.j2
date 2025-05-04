@@ -1,0 +1,18 @@
+[Unit]
+Description=Sample Node.js Application
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/app
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=app
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

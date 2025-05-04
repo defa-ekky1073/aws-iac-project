@@ -1,0 +1,9 @@
+[app_servers]
+app ansible_host=${app_server_public_ip} ansible_user=ubuntu ansible_private_key_file=${ssh_key_path} ansible_become=yes
+
+[monitoring]
+app ansible_host=${app_server_public_ip} ansible_user=ubuntu ansible_private_key_file=${ssh_key_path} ansible_become=yes
+
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+app_server_private_ip=${app_server_private_ip}

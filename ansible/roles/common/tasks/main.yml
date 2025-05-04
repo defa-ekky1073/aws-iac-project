@@ -1,0 +1,49 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install common packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - gnupg
+      - python3-pip
+      - vim
+      - git
+      - unzip
+      - htop
+      - net-tools
+
+- name: Configure timezone
+  timezone:
+    name: UTC
+
+- name: Create application directory
+  file:
+    path: /opt/app
+    state: directory
+    mode: '0755'
+    owner: ubuntu
+    group: ubuntu
+
+- name: Set system limits for application
+  pam_limits:
+    domain: '*'
+    limit_type: soft
+    limit_item: nofile
+    value: '65536'
+
+- name: Set system limits for application (hard)
+  pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nofile
+    value: '65536'
